@@ -1,0 +1,9 @@
+[submodule "mcp-servers/mcp-filesystem-server"]
+	path = mcp-servers/mcp-filesystem-server
+	url = https://github.com/bsmi021/mcp-filesystem-server.git
+[submodule "mcp-servers/mcp-image-gen"]
+	path = mcp-servers/mcp-image-gen
+	url = https://github.com/Legorobotdude/mcp-image-gen.git
+[submodule "mcp-servers/servers"]
+	path = mcp-servers/servers
+	url = https://github.com/modelcontextprotocol/servers.git
