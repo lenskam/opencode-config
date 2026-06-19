@@ -1,5 +1,31 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "superpowers@git+https://github.com/obra/superpowers.git",
+    "opencode-pollinations-plugin",
+    "opencode-nanobanana",
+    "opencode-audio"
+  ],
+  "permission": {
+    "read": {
+      "*": "allow"
+    },
+    "edit": {
+      "*": "allow"
+    },
+    "glob": {
+      "*": "allow"
+    },
+    "grep": {
+      "*": "allow"
+    },
+    "bash": {
+      "*": "allow"
+    },
+    "external_directory": {
+      "*": "allow"
+    }
+  },
   "mcp": {
     "n8n-mcp": {
       "type": "local",
@@ -29,11 +55,14 @@
       "enabled": true
     },
     "stitch": {
-      "type": "remote",
+      "type": "local",
       "enabled": true,
-      "url": "https://stitch.googleapis.com/mcp",
-      "headers": {
-        "X-Goog-Api-Key": "${env:GOOGLE_MCP_API_KEY}"
+      "command": [
+        "/home/deployer/.config/opencode/stitch-wrapper.sh"
+      ],
+      "environment": {
+        "GOOGLE_CLOUD_PROJECT": "gen-lang-client-0948956364",
+        "STITCH_ACCESS_TOKEN": "${env:STITCH_ACCESS_TOKEN}"
       }
     },
     "mcp-image-gen": {
@@ -41,7 +70,7 @@
       "type": "local",
       "command": [
         "node",
-        "./mcp-servers/mcp-image-gen/dist/index.js"
+        "/home/deployer/.config/opencode/mcp-servers/mcp-image-gen/dist/index.js"
       ],
       "environment": {
         "GEMINI_API_KEY": "${env:GEMINI_API_KEY}"
@@ -62,30 +91,42 @@
       "type": "local",
       "command": [
         "node",
-        "./mcp-servers/servers/src/sequentialthinking/dist/index.js"
+        "/home/deployer/.config/opencode/mcp-servers/servers/src/sequentialthinking/dist/index.js"
       ]
     },
     "wordpress": {
       "command": [
         "npx",
-        "@automattic/mcp-wordpress-remote"
+        "-y",
+        "wordpress-mcp-server"
       ],
       "environment": {
-        "WP_API_URL": "${env:WP_API_URL}",
-        "WP_API_USERNAME": "${env:WP_API_USERNAME}",
-        "WP_API_PASSWORD": "${env:WP_API_PASSWORD}"
+        "WP_SITE_URL": "${env:WP_API_URL}",
+        "WP_USERNAME": "${env:WP_API_USERNAME}",
+        "WP_APPLICATION_PASSWORD": "${env:WP_API_PASSWORD}"
       },
       "enabled": true,
       "type": "local"
-    },
-    "pencil": {
-      "command": [
-        "/home/kamdemlens/.antigravity/extensions/highagency.pencildev-0.6.36-universal/out/mcp-server-linux-x64",
-        "--app",
-        "antigravity"
-      ],
-      "enabled": true,
-      "type": "local"
+    }
+  },
+  "agent": {
+    "agents": {
+      "wordpress-dev": {
+        "model": "opencode/deepseek-v4-flash-free",
+        "instructions": "You are a WordPress development expert. Handle theme development, plugin building, content publishing, and site maintenance. Load the relevant sub-agent skill (wp-publish, wp-theme, wp-plugin, wp-maintenance) based on the user's request."
+      },
+      "n8n-automations": {
+        "model": "opencode/deepseek-v4-flash-free",
+        "instructions": "You are an n8n workflow automation expert. Build new automations and troubleshoot existing ones. Expert in Google products, WhatsApp, Telegram, and Gemini integrations. Load the relevant sub-agent skill (n8n-new, n8n-troubleshoot, n8n-google, n8n-messaging, n8n-gemini) based on the task."
+      },
+      "software-dev": {
+        "model": "opencode/deepseek-v4-flash-free",
+        "instructions": "You are a full-stack software developer. Handle API design, web apps, mobile apps, DevOps, and database work. Load the relevant sub-agent skill (sw-api, sw-web, sw-mobile, sw-devops, sw-db) based on the request."
+      },
+      "content-creation": {
+        "model": "opencode/deepseek-v4-flash-free",
+        "instructions": "You are a content creation expert. Handle social media, short-form video, long-form video, photography, video editing, blog writing, marketing copy, and SEO optimization. Load the relevant sub-agent skill (cc-social, cc-shorts, cc-videos, cc-photo, cc-video_editing, cc-blog, cc-marketing, cc-seo) based on the task."
+      }
     }
   }
 }

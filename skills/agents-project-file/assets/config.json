@@ -1,0 +1,59 @@
+{
+  "name": "agents-project-file",
+  "version": "1.0.0",
+  "description": "Generate AGENTS.md instruction files for AI agents working on software projects",
+  "supported_project_types": [
+    "saas",
+    "mobile-app",
+    "landing-page",
+    "api-service",
+    "e-commerce",
+    "internal-tool"
+  ],
+  "default_output_filename": "AGENTS.md",
+  "sections": {
+    "required": [
+      "project_overview",
+      "technology_stack",
+      "system_architecture",
+      "frontend_specifications",
+      "backend_specifications",
+      "testing_strategy",
+      "git_workflow",
+      "deployment_cicd",
+      "documentation_guidelines",
+      "coding_standards",
+      "environment_setup",
+      "ai_productivity_config",
+      "ai_instructions",
+      "agent_commands",
+      "development_phases",
+      "revision_history"
+    ],
+    "type_specific": {
+      "saas": ["billing_models", "multi_tenant_design"],
+      "mobile-app": ["offline_sync", "push_notifications"],
+      "landing-page": ["seo_optimization", "analytics_tracking"],
+      "api-service": ["rate_limiting", "api_key_management"],
+      "e-commerce": ["catalog_system", "payment_orchestration"],
+      "internal-tool": ["rbac", "crud_scaffolding"]
+    }
+  },
+  "generator": {
+    "script": "scripts/generate_agents_md.py",
+    "min_args": 3,
+    "max_key_terms": 10,
+    "encoding": "utf-8"
+  },
+  "validation": {
+    "required_checks": [
+      "file_starts_with_header",
+      "no_placeholder_brackets",
+      "tech_stack_matches_input",
+      "key_terms_in_sections",
+      "project_specific_commands",
+      "no_todo_remaining",
+      "well_formed_markdown"
+    ]
+  }
+}

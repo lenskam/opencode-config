@@ -974,7 +974,57 @@ Maintain a “Skills” section in `MASTER_IMPLEMENTATION.md` to track all custo
 
 ---
 
-This section gives the agent a clear framework for discovering, using, creating, and maintaining skills—essential for building a self‑improving assistant. Insert it after the “Custom Commands” or “MCP Integration” section, or as a new top‑level section before “Living Document & Revision History”.
+### 9. Skill Categories
+
+Skills are grouped into categories based on their role in the workflow. Each category has different invocation rules and expectations.
+
+| Category | Frontmatter Marker | Behavior |
+|----------|-------------------|----------|
+| **Process** | `metadata.category: process` (implicit by name) | Determines HOW to approach a task. Invoked first. Examples: `brainstorming`, `debugging`, `using-superpowers` |
+| **Domain** | `metadata.category: domain` (default) | Guides implementation within a specific domain. Invoked after process skills and AGENTS.md rules. Examples: `wp-block-development`, `fastapi-pro` |
+| **Router** | `metadata.category: router` | Dispatches to one or more domain sub-skills based on triage + user intent. Invoked to classify work and load the right sub-skills. Examples: `wordpress-router` |
+
+#### Router Skills
+
+Router skills accept broad inputs, classify the work, then invoke the appropriate domain sub-skills via the `skill` tool. They:
+
+1. **Triage** the input (e.g., run project detection scripts)
+2. **Classify** what kind of work is needed
+3. **Invoke** one or more domain sub-skills using `skill({ name: "..." })`
+4. **Combine** outputs when multiple sub-skills are needed
+5. **Apply** guardrails and verification
+
+Router skills should document their intent-to-skill mapping clearly so the agent knows which sub-skills to load for each type of request.
+
+See `wordpress-router` for a working example, and `router-skill-template` for the pattern.
+
+---
+
+### 10. Skills Alignment (AGENTS.md + Skills)
+
+AGENTS.md and skills are **complementary**, not competing. They serve different purposes and both apply:
+
+| | AGENTS.md | Skills |
+|---|---|---|
+| **Scope** | Process, structure, conventions | Domain expertise, workflows |
+| **Covers** | Planning, testing, git, security, coding standards | How to build a block, how to debug a framework |
+| **When applied** | Throughout the entire session | When the domain task matches |
+| **Priority** | Higher (user instructions) | After AGENTS.md |
+
+#### How to Apply Both
+
+1. **Invoke relevant skills** first (per `using-superpowers` flow)
+2. **Read AGENTS.md rules** for the relevant sections:
+   - **Planning**: For multi-step tasks, create plan files, present, get approval
+   - **Testing**: Apply TDD, run verification loops
+   - **Tooling**: Run linters and typecheckers after changes
+   - **Session**: Log decisions, write summaries
+3. **Apply both together**: The skill tells you HOW to do domain work (e.g., "run wp project triage"), AGENTS.md tells you HOW to structure the process (e.g., "create a plan first, present it, get approval")
+4. **Verify using both**: Run the skill's verification steps AND AGENTS.md gates (lint, typecheck, test)
+
+When in doubt: follow AGENTS.md for process, follow skills for domain implementation.
+
+---
 
 ## Proactive Reminders & Project Orientation
 
